@@ -41,7 +41,7 @@ object KafkaBuild extends Build {
   </license>
 </licenses>,
     scalacOptions ++= Seq("-deprecation", "-unchecked", "-g:none"),
-    crossScalaVersions := Seq("2.8.0","2.8.2", "2.9.1", "2.9.2", "2.10.1"),
+    crossScalaVersions := Seq("2.8.0","2.8.2", "2.9.1", "2.9.2", "2.10.3"),
     excludeFilter in unmanagedSources <<= scalaVersion(v => if (v.startsWith("2.8")) "*_2.9+.scala" else "*_2.8.scala"),
     scalaVersion := "2.8.0",
     version := "0.8.0",
@@ -50,6 +50,7 @@ object KafkaBuild extends Build {
     buildNumber := System.getProperty("build.number", ""),
     version <<= (buildNumber, version)  { (build, version)  => if (build == "") version else version + "+" + build},
     releaseName <<= (name, version, scalaVersion) {(name, version, scalaVersion) => name + "_" + scalaVersion + "-" + version},
+    javacOptions ++= Seq("-Xlint:unchecked", "-source", "1.5"),
     javacOptions in compile ++= Seq("-Xlint:unchecked", "-source", "1.5"),
     javacOptions in doc ++= Seq("-source", "1.5"),
     parallelExecution in Test := false, // Prevent tests from overrunning each other
@@ -75,6 +76,7 @@ object KafkaBuild extends Build {
   )
 
   val hadoopSettings = Seq(
+    javacOptions ++= Seq("-Xlint:deprecation"),
     javacOptions in compile ++= Seq("-Xlint:deprecation"),
     libraryDependencies ++= Seq(
       "org.apache.avro"      % "avro"               % "1.4.0",
