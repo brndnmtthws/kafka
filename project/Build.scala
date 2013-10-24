@@ -43,8 +43,8 @@ object KafkaBuild extends Build {
     scalacOptions ++= Seq("-deprecation", "-unchecked", "-g:none"),
     crossScalaVersions := Seq("2.8.0","2.8.2", "2.9.1", "2.9.2", "2.10.3"),
     excludeFilter in unmanagedSources <<= scalaVersion(v => if (v.startsWith("2.8")) "*_2.9+.scala" else "*_2.8.scala"),
-    scalaVersion := "2.8.0",
-    version := "0.8.1",
+    scalaVersion := "2.10.3",
+    version := "0.8.0",
     publishTo := Some("Apache Maven Repo" at "https://repository.apache.org/service/local/staging/deploy/maven2"),
     credentials += Credentials(Path.userHome / ".m2" / ".credentials"),
     buildNumber := System.getProperty("build.number", ""),
@@ -86,9 +86,9 @@ object KafkaBuild extends Build {
       "commons-logging"      % "commons-logging"    % "1.0.4",
       "org.codehaus.jackson" % "jackson-core-asl"   % "1.5.5",
       "org.codehaus.jackson" % "jackson-mapper-asl" % "1.5.5",
-      "org.apache.hadoop"    % "hadoop-core"        % "0.20.2"
+      "org.apache.hadoop"    % "hadoop-core"        % "1.2.1"
     ),
-    ivyXML := 
+    ivyXML :=
        <dependencies>
          <exclude module="netty"/>
          <exclude module="javax"/>
