@@ -599,9 +599,9 @@ class Log(val dir: File,
     lock synchronized {
       val floor: java.lang.Long = segments.floorKey(from)
       if(floor eq null)
-        asIterable(segments.headMap(to).values)
+        segments.headMap(to).values.toIterable
       else
-        asIterable(segments.subMap(floor.longValue, true, to, false).values)
+        segments.subMap(floor.longValue, true, to, false).values.toIterable
     }
   }
   

@@ -236,7 +236,7 @@ class KafkaProject(info: ProjectInfo) extends ParentProject(info) with IdeaProje
     val jopt = "net.sf.jopt-simple" % "jopt-simple" % "3.2"
     val slf4jSimple = "org.slf4j" % "slf4j-simple" % "1.6.4"
   }
-  
+
   trait HadoopDependencies {
     val avro = "org.apache.avro" % "avro" % "1.4.0"
     val commonsLogging = "commons-logging" % "commons-logging" % "1.0.4"
@@ -246,6 +246,6 @@ class KafkaProject(info: ProjectInfo) extends ParentProject(info) with IdeaProje
   }
 
   trait CompressionDependencies {
-    val snappy = "org.xerial.snappy" % "snappy-java" % "1.0.4.1"	
+    val snappy = "org.xerial.snappy" % "snappy-java" % "1.1.0"
   }
 }
