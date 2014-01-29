@@ -215,11 +215,11 @@ object AdminUtils extends Logging {
 
     // write the new config--may not exist if there were previously no overrides
     writeTopicConfig(zkClient, topic, configs)
-    
+
     // create the change notification
     zkClient.createPersistentSequential(ZkUtils.TopicConfigChangesPath + "/" + TopicConfigChangeZnodePrefix, Json.encode(topic))
   }
-  
+
   /**
    * Write out the topic config to zk, if there is any
    */
@@ -231,7 +231,7 @@ object AdminUtils extends Logging {
     val map = Map("version" -> 1, "config" -> configMap)
     ZkUtils.updatePersistentPath(zkClient, ZkUtils.getTopicConfigPath(topic), Json.encode(map))
   }
-  
+
   /**
    * Read the topic config (if any) from zk
    */
@@ -241,7 +241,7 @@ object AdminUtils extends Logging {
     if(str != null) {
       Json.parseFull(str) match {
         case None => // there are no config overrides
-        case Some(map: Map[String, _]) => 
+        case Some(map: Map[String, _]) =>
           require(map("version") == 1)
           map.get("config") match {
             case Some(config: Map[String, String]) =>
