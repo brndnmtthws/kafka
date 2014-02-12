@@ -54,6 +54,7 @@ class SimpleConsumer(val host: String,
 
   private def reconnect() {
     disconnect()
+    Thread.sleep(500)
     connect()
   }
 
