@@ -125,7 +125,8 @@ class RequestSendThread(val controllerId: Int,
     try {
       lock synchronized {
         var isSendSuccessful = false
-        while(isRunning.get() && !isSendSuccessful) {
+        var failureCount = 0;
+        while(isRunning.get() && !isSendSuccessful && failureCount < 3) {
           // if a broker goes down for a long time, then at some point the controller's zookeeper listener will trigger a
           // removeBroker which will invoke shutdown() on this thread. At that point, we will stop retrying.
           try {
@@ -141,6 +142,7 @@ class RequestSendThread(val controllerId: Int,
               isSendSuccessful = false
               // backoff before retrying the connection and send
               Utils.swallow(Thread.sleep(300))
+              failureCount += 1
           }
         }
         receive = channel.receive()
