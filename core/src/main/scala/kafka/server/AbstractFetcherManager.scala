@@ -33,15 +33,19 @@ abstract class AbstractFetcherManager(protected val name: String, metricPrefix: 
   private val mapLock = new Object
   this.logIdent = "[" + name + "] "
 
+  def getMaxLag() : Long = {
+    fetcherThreadMap.foldLeft(0L)((curMaxAll, fetcherThreadMapEntry) => {
+      fetcherThreadMapEntry._2.fetcherLagStats.stats.foldLeft(0L)((curMaxThread, fetcherLagStatsEntry) => {
+        curMaxThread.max(fetcherLagStatsEntry._2.lag)
+      }).max(curMaxAll)
+    })
+  }
+
   newGauge(
     metricPrefix + "-MaxLag",
     new Gauge[Long] {
       // current max lag across all fetchers/topics/partitions
-      def value = fetcherThreadMap.foldLeft(0L)((curMaxAll, fetcherThreadMapEntry) => {
-        fetcherThreadMapEntry._2.fetcherLagStats.stats.foldLeft(0L)((curMaxThread, fetcherLagStatsEntry) => {
-          curMaxThread.max(fetcherLagStatsEntry._2.lag)
-        }).max(curMaxAll)
-      })
+      def value = getMaxLag
     }
   )
 

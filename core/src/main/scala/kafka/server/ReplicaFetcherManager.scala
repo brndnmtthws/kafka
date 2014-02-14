@@ -18,18 +18,33 @@
 package kafka.server
 
 import kafka.cluster.Broker
+import kafka.utils.Utils
+
+trait ReplicaFetcherManagerMBean {
+  def getMaxLag(): Long
+}
+
+object ReplicaFetcherManager {
+  val MBeanName = "kafka.server:type=ReplicaFetcherManager,name=ReplicaOps"
+}
 
 class ReplicaFetcherManager(private val brokerConfig: KafkaConfig, private val replicaMgr: ReplicaManager)
         extends AbstractFetcherManager("ReplicaFetcherManager on broker " + brokerConfig.brokerId,
-                                       "Replica", brokerConfig.numReplicaFetchers) {
+                                       "Replica", brokerConfig.numReplicaFetchers) with ReplicaFetcherManagerMBean {
+  Utils.registerMBean(this, ReplicaFetcherManager.MBeanName)
 
   override def createFetcherThread(fetcherId: Int, sourceBroker: Broker): AbstractFetcherThread = {
     new ReplicaFetcherThread("ReplicaFetcherThread-%d-%d".format(fetcherId, sourceBroker.id), sourceBroker, brokerConfig, replicaMgr)
   }
 
+  override def getMaxLag(): Long = {
+    super.getMaxLag()
+  }
+
   def shutdown() {
     info("shutting down")
+    Utils.unregisterMBean(ReplicaFetcherManager.MBeanName)
     closeAllFetchers()
     info("shutdown completed")
-  }  
+  }
 }
